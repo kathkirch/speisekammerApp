@@ -26,6 +26,10 @@ public class Produkt {
     private double packageAmount;
     Location location;
 
+    public Produkt (){
+
+    }
+
     public Produkt (String barcode, String productName, String productDescription,
                    int packSize, double packageAmount, Location location) {
         this.barcode = barcode;

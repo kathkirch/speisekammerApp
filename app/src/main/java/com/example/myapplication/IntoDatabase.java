@@ -25,11 +25,15 @@ public class IntoDatabase extends AppCompatActivity {
     public static final String BARCODE = "barcodeText";
 
     private String receivingBarcode;
-    private String barcodeDB;
     private boolean barcodeExist;
     private HashMap hashMap;
 
     private static final String TAG = "Info";
+
+    boolean productKnowen;
+    DatabaseReference myRef;
+
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
 
@@ -41,35 +45,47 @@ public class IntoDatabase extends AppCompatActivity {
         Intent intent = getIntent();
         receivingBarcode = intent.getStringExtra(BarcodeScanner.BARCODE);
 
-        intoDatabase();
+        myRef = database.getReference("products");
 
-    }
-
-    public String readBarcodeDB (){
-
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-        //Getting Reference to Root Node
-        DatabaseReference myRef = database.getReference();
-
-        myRef.addValueEventListener(new ValueEventListener() {
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Produkt produkt = dataSnapshot.getValue(Produkt.class);
-                Toast.makeText(getApplicationContext(), "Barcode wird geprueft", Toast.LENGTH_SHORT).show();
-                barcodeDB = produkt.getBarcode();
-            }
+                for (DataSnapshot data : dataSnapshot.getChildren()){
+                    Produkt produkt = data.getValue(Produkt.class);
+                    String barcodeToCheck;
+                    barcodeToCheck = produkt.getBarcode();
 
+                    if (checkBarcode(receivingBarcode, barcodeToCheck)) {
+
+                        double newPackageAmount = produkt.getPackageAmount() + 1;
+                        produkt.setPackageAmount(newPackageAmount);
+
+                        hashMap = new HashMap();
+                        hashMap.put("barcode", produkt.getBarcode());
+                        hashMap.put("productName", produkt.getProductName());
+                        hashMap.put("productDescription", produkt.getProductDescription());
+                        hashMap.put("packSize", produkt.getPackSize());
+                        hashMap.put("packageAmount", produkt.getPackageAmount());
+                        hashMap.put("location", produkt.getLocation());
+
+                        productKnowen = true;
+                        operateOnDatabase(productKnowen);
+                    }
+                    else {
+                        productKnowen = false;
+                        operateOnDatabase(productKnowen);
+                    }
+                }
+            }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(getApplicationContext(), "hier ging etwas schief", Toast.LENGTH_SHORT).show();
             }
         });
-        return barcodeDB;
     }
 
-    public boolean checkBarcode (String receivingBarcode) {
-        if (receivingBarcode.equals(readBarcodeDB())) {
+    public boolean checkBarcode (String receivingBarcode, String barcodeDB) {
+        if (receivingBarcode.equals(barcodeDB)) {
             barcodeExist = true;
         } else {
             barcodeExist = false;
@@ -77,49 +93,29 @@ public class IntoDatabase extends AppCompatActivity {
         return barcodeExist;
     }
 
-
-    public void intoDatabase () {
-
-        if (checkBarcode(receivingBarcode)){
+    public void operateOnDatabase (boolean bool){
+        if (bool == true){
             updatePackageAmount();
-        } else if (!checkBarcode(receivingBarcode)){
-            Intent insertIntent = new Intent(getApplicationContext(), InsertProduct.class);
-            insertIntent.putExtra(BARCODE, receivingBarcode);
-            startActivity(insertIntent);
+        }else {
+            newObjectinDatabase();
         }
     }
 
+    public void newObjectinDatabase () {
+        Intent insertIntent = new Intent(getApplicationContext(), InsertProduct.class);
+        insertIntent.putExtra(BARCODE, receivingBarcode);
+        startActivity(insertIntent);
+    }
+
     public void updatePackageAmount () {
-
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
-        myRef.child(receivingBarcode).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Produkt produkt = dataSnapshot.getValue(Produkt.class);
-                produkt.setPackageAmount(produkt.getPackageAmount()+1);
-
-                //make hasMap
-                hashMap = new HashMap();
-                hashMap.put("bC", produkt.getBarcode());
-                hashMap.put("pN", produkt.getProductName());
-                hashMap.put("pD", produkt.getProductDescription());
-                hashMap.put("pS", produkt.getPackSize());
-                hashMap.put("pA", produkt.getPackageAmount());
-                hashMap.put("lo", produkt.getLocation());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, "onCancelled: Something went wrong! Error:" + databaseError.getMessage() );
-            }
-        });
 
         myRef.child(receivingBarcode).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(getApplicationContext(), "Produkt wurde aktualisiert",
                         Toast.LENGTH_SHORT).show();
+                Intent mainIntent = new Intent(IntoDatabase.this, MainActivity.class);
+                startActivity(mainIntent);
             }
         });
     }

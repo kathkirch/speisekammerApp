@@ -59,10 +59,13 @@ public class InsertProduct extends AppCompatActivity {
         Intent intent = getIntent();
         receivingBarcode = intent.getStringExtra(IntoDatabase.BARCODE);
 
+
         btSpeichern.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addToDatabase();
+                Intent mainIntent = new Intent(InsertProduct.this, MainActivity.class);
+                startActivity(mainIntent);
             }
         });
     }
@@ -73,9 +76,7 @@ public class InsertProduct extends AppCompatActivity {
     }
 
     public boolean checkData(){
-
         boolean dataChecked = true;
-
         if ( (isEmpty(pName)) || (isEmpty(pDescription)) || (isEmpty(pSize)) || (isEmpty(pAmount))){
             Toast.makeText(getApplicationContext(), R.string.alleFelderAusfuellen_warnung,
                     Toast.LENGTH_SHORT).show();
@@ -102,6 +103,8 @@ public class InsertProduct extends AppCompatActivity {
                     proAmount, proLocation);
 
             productNode.child(receivingBarcode).setValue(produkt);
+            Toast.makeText(getApplicationContext(), "Produkt hinzugefuegt", Toast.LENGTH_SHORT)
+                    .show();
 
         } else {
             Toast.makeText(getApplicationContext(), "Produkt konnte nicht gespeichert werden",
