@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="kuehlschrank">Kuehlschrank</string>
+    <string name="tiefkuehler">Tiefkuehler</string>
+    <string name="neu">NEU</string>
+    <string name="speis">Speis</string>
+    <string name="vorratsschrank">Vorratsschrank</string>
+    <string name="willkommen_in_deiner_vorratskammer">Willkommen in deiner Vorratskammer</string>
+    <string name="title_activity_into_database">IntoDatabase</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="speichern">speichern</string>
+    <string name="ort">Ort:</string>
+    <string name="menge">Menge:</string>
+    <string name="packungsgroesse">Packungsgröße:</string>
+    <string name="neues_produkt_hinzufuegen">neues Produkt hinzufügen</string>
+    <string name="wie_viel_packungen">wie viele Packungen?</string>
+    <string name="produktbezeichnung">Produktbezeichnung</string>
+    <string name="produkt_beschreibung">Produkt- beschreibung:</string>
+    <string name="was_ist_drinn">Was ist drinn?</string>
+    <string name="wie_viel_ist_drinn">Wie viel ist drinn?</string>
+    <string name="produktname">Produktname:</string>
+    <string name="alleFelderAusfuellen_warnung">es müssen alle Felder ausgefüllt werden</string>
+</resources>
