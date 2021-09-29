@@ -19,7 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/vorratskammer_layout"
         android:usesCleartextTraffic="true">
-        <activity android:name=".InsertProduct"></activity>
+
+
+        <activity android:name=".InsertProduct" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

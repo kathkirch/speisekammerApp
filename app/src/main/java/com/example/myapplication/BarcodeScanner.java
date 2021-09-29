@@ -1,9 +1,12 @@
 package com.example.myapplication;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
@@ -13,7 +16,9 @@ import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +41,13 @@ public class BarcodeScanner extends AppCompatActivity {
     private Button checkBarcode;
     Intent intent;
     public static final String BARCODE = "barcodeText";
+    public static final String LOCATION = "location";
+    String location;
+
+    private RadioButton pantry;
+    private RadioButton pantryBoard;
+    private RadioButton fridge;
+    private RadioButton freezer;
 
 
     @Override
@@ -47,6 +59,11 @@ public class BarcodeScanner extends AppCompatActivity {
         barcodeText = findViewById(R.id.barcode_text);
         checkBarcode = findViewById(R.id.bt_check_barcode);
 
+        pantry = findViewById(R.id.radioPantry);
+        pantryBoard = findViewById(R.id.radioPantryBoard);
+        fridge = findViewById(R.id.radioFridge);
+        freezer = findViewById(R.id.radioFreezer);
+
         //Intent to start new Activity
         intent = new Intent (getApplicationContext(), IntoDatabase.class);
 
@@ -54,12 +71,35 @@ public class BarcodeScanner extends AppCompatActivity {
         checkBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String loco = locationPicker();
+
                 String barcode = barcodeText.getText().toString();
+                intent.putExtra(LOCATION, loco);
                 intent.putExtra(BARCODE, barcode);
                 startActivity(intent);
             }
         });
     }
+
+
+    public String locationPicker (){
+
+        if (pantry.isChecked()){
+            location = "Speis";
+        }
+        else if (pantryBoard.isChecked()){
+            location = "Vorratsschrank";
+        }
+        else if (fridge.isChecked()){
+            location = "Kühlschrank";
+        }
+        else if (freezer.isChecked()){
+            location = "Gefrierschrank";
+        }
+        return  location;
+    }
+
 
     private void initialiseDetectorsAndSources() {
 

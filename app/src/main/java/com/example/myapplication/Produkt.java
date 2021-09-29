@@ -8,30 +8,22 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class Produkt {
-
-
-
-    public enum Location {
-        pantry,
-        pantryboard,
-        fridge,
-        freezer
-    }
+public class Produkt implements Comparable <Produkt> {
 
     private String barcode;
     private String productName;
     private String productDescription;
-    private int packSize;
+    private String packSize;
     private double packageAmount;
-    Location location;
+    private String location;
+
 
     public Produkt (){
 
     }
 
     public Produkt (String barcode, String productName, String productDescription,
-                   int packSize, double packageAmount, Location location) {
+                   String packSize, double packageAmount, String location) {
         this.barcode = barcode;
         this.productName = productName;
         this.productDescription = productDescription;
@@ -52,7 +44,7 @@ public class Produkt {
         return productDescription;
     }
 
-    public int getPackSize() {
+    public String getPackSize() {
         return packSize;
     }
 
@@ -64,11 +56,19 @@ public class Produkt {
         this.packageAmount = packageAmount;
     }
 
-    public Location getLocation() {
+    public String getLocation() {
         return location;
     }
 
+    @Override
+    public int compareTo(Produkt o) {
+        int c = this.barcode.compareTo(o.barcode);
+        return c;
+    }
 
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
 }
 
 

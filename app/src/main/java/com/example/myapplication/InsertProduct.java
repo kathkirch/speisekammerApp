@@ -25,40 +25,48 @@ public class InsertProduct extends AppCompatActivity {
     private EditText pSize;
     private EditText pAmount;
     private Button btSpeichern;
-
     private Spinner spLocation;
+    private Spinner spUnits;
 
     private String receivingBarcode;
     private String proName;
     private String proDescription;
-    private int proSize;
+    private String proSize;
     private double proAmount;
-    private Produkt.Location proLocation;
+    private String proLocation;
 
+    private String loco;
 
+    private final String [] array_Units = new String [] {"l", "ml", "g", "kg"};
 
-
+    private final String [] array_locations = new String [] {"Speis", "Vorratsschrank", "Kühlschrank",
+                                                        "Gefrierschrank"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert_product);
 
+        Intent intent = getIntent();
+
+        receivingBarcode = intent.getStringExtra(IntoDatabase.BARCODE);
+        loco = intent.getStringExtra(IntoDatabase.LOCATION);
+
         pName = findViewById(R.id.eTpName);
         pDescription = findViewById(R.id.eTpDesc);
         pSize = findViewById(R.id.eTpSize);
+        spUnits = findViewById(R.id.spUnits);
         pAmount = findViewById(R.id.eTpAmount);
         spLocation = findViewById(R.id.spLocation);
         btSpeichern = findViewById(R.id.btSave);
 
-        proName = pName.getText().toString();
+        spLocation.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, array_locations));
+        spUnits.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_selectable_list_item, array_Units));
 
-        spLocation.setAdapter(new ArrayAdapter<Produkt.Location>(this,
-                android.R.layout.simple_list_item_1, Produkt.Location.values()));
 
-        Intent intent = getIntent();
-        receivingBarcode = intent.getStringExtra(IntoDatabase.BARCODE);
-
+        spLocation.setSelection(getSelection(loco));
 
         btSpeichern.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,33 +93,54 @@ public class InsertProduct extends AppCompatActivity {
         return dataChecked;
     }
 
+    public int getSelection (String loco){
+        int index;
+        switch (loco){
+            case "Speis" :
+                index = 0;
+                return index;
+            case "Vorratsschrank" :
+                index = 1;
+                return index;
+            case "Kühlschrank" :
+                index = 2;
+                return index;
+            case "Gefrierschrank" :
+                index = 3;
+                return index;
+            default:
+                return 0;
+        }
+    }
+
     public void addToDatabase (){
+
+        proLocation = spLocation.getSelectedItem().toString();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference productNode = database.getReference("products");
-
+        DatabaseReference locationNode = productNode.child(proLocation);
+        DatabaseReference barcodeNode = locationNode.child(receivingBarcode);
         Produkt produkt;
 
-        if (checkData() && (receivingBarcode != null)) {
+        if (checkData() && (receivingBarcode != null) && (loco != null)) {
             proName = pName.getText().toString();
             proDescription = pDescription.getText().toString();
-            proSize = Integer.parseInt(pSize.getText().toString());
+            proSize = (pSize.getText().toString() + spUnits.getSelectedItem().toString());
             proAmount = Double.parseDouble(pAmount.getText().toString());
-            proLocation = (Produkt.Location) spLocation.getSelectedItem();
+
 
             produkt = new Produkt(receivingBarcode, proName, proDescription, proSize,
                     proAmount, proLocation);
 
-            productNode.child(receivingBarcode).setValue(produkt);
-            Toast.makeText(getApplicationContext(), "Produkt hinzugefuegt", Toast.LENGTH_SHORT)
+
+            barcodeNode.setValue(produkt);
+            Toast.makeText(getApplicationContext(), R.string.produkt_hinzugefuegt, Toast.LENGTH_SHORT)
                     .show();
 
         } else {
-            Toast.makeText(getApplicationContext(), "Produkt konnte nicht gespeichert werden",
+            Toast.makeText(getApplicationContext(), R.string.produkt_nicht_gespeichert,
                     Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
 }
