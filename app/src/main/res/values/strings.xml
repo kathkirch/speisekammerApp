@@ -15,7 +15,6 @@
     <string name="packungsgroesse">Packungsgröße:</string>
     <string name="neues_produkt_hinzufuegen">neues Produkt hinzufügen</string>
     <string name="wie_viel_packungen">wie viele Packungen?</string>
-    <string name="produktbezeichnung">Produktbezeichnung</string>
     <string name="produkt_beschreibung">Produkt- beschreibung:</string>
     <string name="was_ist_drinn">Was ist drinn?</string>
     <string name="wie_viel_ist_drinn">Wie viel ist drinn?</string>
@@ -29,4 +28,8 @@
     <string name="produkt_nicht_gespeichert">Produkt konnte nicht gespeichert werden</string>
     <string name="products">products</string>
     <string name="netto_gewicht">Nettogewicht</string>
+    <string name="ort_auswaehlen">Ort auswählen</string>
+    <string name="produktbezeichnung">Produktbezeichnung</string>
+    <string name="a">a</string>
+    <string name="stueck">Stück</string>
 </resources>

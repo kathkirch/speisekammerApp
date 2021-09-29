@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:backgroundTint="@color/background_green">
+    android:background="@color/WhiteSmoke">
 
     <TextView
         android:id="@+id/tv_title"
@@ -40,8 +40,9 @@
         android:layout_marginRight="30dp"
         android:layout_below="@+id/surface_view"
         app:layout_constraintTop_toBottomOf="@id/surface_view"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:text="Barcode Text"
+        android:textColor="@color/black"
         android:textSize="25sp"
         android:padding="5dp"/>
 
@@ -49,11 +50,11 @@
         android:id="@+id/bt_check_barcode"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_toEndOf="@id/barcode_text"
+        android:layout_below="@id/radioGroup"
         android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_below="@+id/surface_view"
         android:layout_marginTop="50dp"
+        android:layout_marginEnd="30dp"
+        android:layout_alignParentEnd="true"
         android:background="@drawable/check_symbol"
         android:gravity="center_horizontal" />
 
@@ -63,21 +64,22 @@
         android:layout_height="wrap_content"
         android:padding="6dp"
         android:layout_marginTop="10dp"
-        android:textSize="22dp"
+        android:textSize="22sp"
         android:textColor="@color/white"
-        android:text="Ort auswählen"
+        android:text="@string/ort_auswaehlen"
         android:gravity="center"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:background="@drawable/title_style"
-        android:layout_below="@+id/bt_check_barcode">
+        android:layout_below="@+id/barcode_text">
     </TextView>
 
     <RadioGroup
+        android:id="@+id/radioGroup"
         android:layout_width="match_parent"
-        android:layout_height="272dp"
-        android:layout_below="@id/bt_check_barcode"
-        android:layout_marginTop="57dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_location_check"
+        android:layout_marginTop="15dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:gravity="center">
@@ -87,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18dp"
-            android:textColor="@color/DarkSlateGray"
+            android:textColor="@color/black"
             android:text="@string/speis" />
 
         <RadioButton
@@ -95,6 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18dp"
+            android:textColor="@color/black"
             android:text="@string/vorratsschrank" />
 
         <RadioButton
@@ -102,6 +105,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18dp"
+            android:textColor="@color/black"
             android:text="@string/kuehlschrank" />
 
         <RadioButton
@@ -109,6 +113,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18dp"
+            android:textColor="@color/black"
             android:text="@string/gefrierschrank" />
 
     </RadioGroup>
