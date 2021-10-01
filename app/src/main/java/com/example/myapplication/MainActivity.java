@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,6 +23,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Intent intentPantryBoard;
     Intent intentFridge;
     Intent intentFreezer;
+
+    public static final String LOCATION = "location";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,21 +53,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intentBarcode);
                 break;
             case R.id.button_kuehlschrank:
-                intentFridge = new Intent(this, Fridge.class);
+                intentFridge = new Intent(this, ProductTable.class);
+                intentFridge.putExtra(LOCATION, "Kühlschrank");
                 startActivity(intentFridge);
                 break;
             case R.id.button_tiefkuehler:
-                intentFreezer = new Intent(this, Freezer.class);
+                intentFreezer = new Intent(this, ProductTable.class);
+                intentFreezer.putExtra(LOCATION, "Gefrierschrank");
                 startActivity(intentFreezer);
                 break;
             case R.id.button_speis:
-                intentPantry = new Intent(this, Pantry.class);
+                intentPantry = new Intent(this, ProductTable.class);
+                intentPantry.putExtra(LOCATION, "Speis");
                 startActivity(intentPantry);
                 break;
             case R.id.button_vorratsschrank:
-                intentPantryBoard = new Intent(this, Pantryboard.class);
+                intentPantryBoard = new Intent(this, ProductTable.class);
+                intentPantryBoard.putExtra(LOCATION, "Vorratsschrank");
                 startActivity(intentPantryBoard);
                 break;
         }
     }
+
 }

@@ -32,4 +32,6 @@
     <string name="produktbezeichnung">Produktbezeichnung</string>
     <string name="a">a</string>
     <string name="stueck">Stück</string>
+    <string name="unit">unit</string>
+    <string name="produktuebersicht">"Produktübersicht: "</string>
 </resources>

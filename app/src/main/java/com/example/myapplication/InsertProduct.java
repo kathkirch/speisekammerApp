@@ -15,8 +15,11 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class InsertProduct extends AppCompatActivity {
 
@@ -32,25 +35,28 @@ public class InsertProduct extends AppCompatActivity {
     private String proName;
     private String proDescription;
     private String proSize;
+    private String proUnit;
     private double proAmount;
     private String proLocation;
 
     private String loco;
+
+    Intent intent;
+    Produkt produkt;
+
 
     private final String [] array_Units = new String [] {"l", "ml", "g", "kg"};
 
     private final String [] array_locations = new String [] {"Speis", "Vorratsschrank", "Kühlschrank",
                                                         "Gefrierschrank"};
 
+    private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private static final DatabaseReference productNode = database.getReference("products");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert_product);
-
-        Intent intent = getIntent();
-
-        receivingBarcode = intent.getStringExtra(IntoDatabase.BARCODE);
-        loco = intent.getStringExtra(IntoDatabase.LOCATION);
 
         pName = findViewById(R.id.eTpName);
         pDescription = findViewById(R.id.eTpDesc);
@@ -60,13 +66,29 @@ public class InsertProduct extends AppCompatActivity {
         spLocation = findViewById(R.id.spLocation);
         btSpeichern = findViewById(R.id.btSave);
 
+        intent = getIntent();
+
+        receivingBarcode = intent.getStringExtra(IntoDatabase.BARCODE);
+        loco = intent.getStringExtra(IntoDatabase.LOCATION);
+
         spLocation.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, array_locations));
         spUnits.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_selectable_list_item, array_Units));
 
+        // wenn intent Extra Produktname hat, werden alle Parameter uebergeben und Auswahl
+        // erscheint im EditText
+        if(intent.hasExtra(HelperClass.PRODUKTNAME)){
+            pName.setText(intent.getStringExtra(HelperClass.PRODUKTNAME));
+            pDescription.setText(intent.getStringExtra(HelperClass.PRODUKTBESCHREIBUNG));
+            pSize.setText(intent.getStringExtra(HelperClass.NETTOGEWICHT));
+            spUnits.setSelection(getUnitSelection(intent.getStringExtra(HelperClass.UNIT)));
+            pAmount.setText((intent.getStringExtra(HelperClass.PRODUKTMENGE)));
+            spLocation.setSelection(getLocationSelection(intent.getStringExtra(HelperClass.LOCATION)));
+        }
 
-        spLocation.setSelection(getSelection(loco));
+        // setzt die Location (wird schon beim Barcodescanner ausgewaehlt)
+        spLocation.setSelection(getLocationSelection(loco));
 
         btSpeichern.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +115,7 @@ public class InsertProduct extends AppCompatActivity {
         return dataChecked;
     }
 
-    public int getSelection (String loco){
+    public int getLocationSelection (String loco){
         int index;
         switch (loco){
             case "Speis" :
@@ -115,32 +137,139 @@ public class InsertProduct extends AppCompatActivity {
 
     public void addToDatabase (){
 
-        proLocation = spLocation.getSelectedItem().toString();
+        DatabaseReference locationNode;
+        DatabaseReference barcodeNode;
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference productNode = database.getReference("products");
-        DatabaseReference locationNode = productNode.child(proLocation);
-        DatabaseReference barcodeNode = locationNode.child(receivingBarcode);
-        Produkt produkt;
+        if (checkData()){
 
-        if (checkData() && (receivingBarcode != null) && (loco != null)) {
             proName = pName.getText().toString();
             proDescription = pDescription.getText().toString();
-            proSize = (pSize.getText().toString() + spUnits.getSelectedItem().toString());
+            proSize = (pSize.getText().toString());
+            proUnit = spUnits.getSelectedItem().toString();
             proAmount = Double.parseDouble(pAmount.getText().toString());
+            proLocation = spLocation.getSelectedItem().toString();
+
+            if ((receivingBarcode != null) && (loco != null)) {
+
+                locationNode = productNode.child(proLocation);
+                barcodeNode = locationNode.child(receivingBarcode);
+
+                produkt = new Produkt(receivingBarcode, proName, proDescription, proSize, proUnit,
+                        proAmount, proLocation);
+
+                barcodeNode.setValue(produkt);
+                Toast.makeText(getApplicationContext(), R.string.produkt_hinzugefuegt, Toast.LENGTH_SHORT)
+                        .show();
+            }
+            else if (proLocation.equals(spLocation.getSelectedItem())
+                    && (proAmount != Double.parseDouble(pAmount.getText().toString()))) {
+
+                String barcode = intent.getStringExtra(HelperClass.BARCODE);
+
+                locationNode = productNode.child(proLocation);
+                barcodeNode = locationNode.child(barcode);
+
+                proAmount = Double.parseDouble(pAmount.getText().toString());
+
+                HashMap hashMap = new HashMap();
+                hashMap.put("barcode", barcode);
+                hashMap.put("productName", proName);
+                hashMap.put("productDescription", proDescription);
+                hashMap.put("packSize", proSize);
+                hashMap.put("unit", proUnit);
+                hashMap.put("packageAmount", proAmount);
+                hashMap.put("location", proLocation);
+
+                barcodeNode.updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getApplicationContext(), "Produktanzahl wurde aktualisiert",
+                                Toast.LENGTH_SHORT).show();
+                        Intent mainIntent = new Intent(InsertProduct.this, MainActivity.class);
+                        startActivity(mainIntent);
+                    }
+                });
+            }
+            else if ((intent.getStringExtra(HelperClass.BARCODE) != null)
+                    && ( intent.getStringExtra(HelperClass.LOCATION).equals(spLocation.getSelectedItem()) == false)){
+
+                String locationNew = spLocation.getSelectedItem().toString();
+                String locationOld = intent.getStringExtra(HelperClass.LOCATION);
+
+                double amountOldLocation = 0;
+
+                double amountOld = Double.parseDouble(intent.getStringExtra(HelperClass.PRODUKTMENGE));
+                double amountNew = Double.parseDouble(pAmount.getText().toString());
+
+                // hier auch noch ganze methode in if else reintun sonst bringt das nix
+                if (amountNew <= amountOld) {
+                    amountOldLocation = amountOld - amountNew;
+                }
+
+                String barcode = intent.getStringExtra(HelperClass.BARCODE);
+                proName = pName.getText().toString();
+                proDescription = pDescription.getText().toString();
+                proSize = pSize.getText().toString();
+                proUnit = spUnits.getSelectedItem().toString();
+
+                HashMap hashMap = new HashMap();
+                hashMap.put("barcode", barcode);
+                hashMap.put("productName", proName);
+                hashMap.put("productDescription", proDescription);
+                hashMap.put("packSize", proSize);
+                hashMap.put("unit", proUnit);
+                hashMap.put("packageAmount", amountOldLocation);
+                hashMap.put("location", locationOld);
+
+                produkt = new Produkt(barcode, proName, proDescription, proSize, proUnit, amountNew, locationNew);
+
+                DatabaseReference newLocationNode = productNode.child(locationNew);
+                barcodeNode = newLocationNode.child(barcode);
+                barcodeNode.setValue(produkt);
+
+                DatabaseReference oldLocationNode = productNode.child(locationOld);
+                barcodeNode = oldLocationNode.child(barcode);
+
+                barcodeNode.updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getApplicationContext(), "Produkt wurde verschoben",
+                                Toast.LENGTH_SHORT).show();
+                        Intent mainIntent = new Intent(InsertProduct.this, MainActivity.class);
+                        startActivity(mainIntent);
+                    }
+                });
+            }
+            else {
+                Toast.makeText(getApplicationContext(), R.string.produkt_nicht_gespeichert,
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
 
-            produkt = new Produkt(receivingBarcode, proName, proDescription, proSize,
-                    proAmount, proLocation);
+    //Kathi schreib Methode die zurueckgibt ob Location geaendert wurde oder nicht
+    // Rueckgabewert boolean true or false
+    // du brauchst das fuer die if else dinger!
 
+    public int getUnitSelection (String unit){
+        int index;
 
-            barcodeNode.setValue(produkt);
-            Toast.makeText(getApplicationContext(), R.string.produkt_hinzugefuegt, Toast.LENGTH_SHORT)
-                    .show();
-
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.produkt_nicht_gespeichert,
-                    Toast.LENGTH_SHORT).show();
+        switch (unit){
+            case "l" :
+                index = 0;
+                return index;
+            case "ml" :
+                index = 1;
+                return index;
+            case "g" :
+                index = 2;
+                return index;
+            case "kg" :
+                index = 3;
+                return index;
+            default :
+                return 0;
         }
     }
 }

@@ -15,6 +15,7 @@ public class Produkt implements Comparable <Produkt> {
     private String productDescription;
     private String packSize;
     private double packageAmount;
+    private String unit;
     private String location;
 
 
@@ -23,11 +24,12 @@ public class Produkt implements Comparable <Produkt> {
     }
 
     public Produkt (String barcode, String productName, String productDescription,
-                   String packSize, double packageAmount, String location) {
+                   String packSize, String unit, double packageAmount, String location) {
         this.barcode = barcode;
         this.productName = productName;
         this.productDescription = productDescription;
         this.packSize = packSize;
+        this.unit = unit;
         this.packageAmount = packageAmount;
         this.location = location;
     }
@@ -68,6 +70,10 @@ public class Produkt implements Comparable <Produkt> {
 
     public void setBarcode(String barcode) {
         this.barcode = barcode;
+    }
+
+    public String getUnit() {
+        return unit;
     }
 }
 

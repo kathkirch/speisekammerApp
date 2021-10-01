@@ -57,14 +57,13 @@ public class IntoDatabase extends AppCompatActivity {
         loco = intent.getStringExtra(BarcodeScanner.LOCATION);
 
         productNode = database.getReference("products");
-        //DatabaseReference locationNode = productNode.child();
+        DatabaseReference locationNode = productNode.child(loco);
 
-        productNode.addListenerForSingleValueEvent(new ValueEventListener() {
+        locationNode.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                System.out.println("r u ever called? huu?");
 
                 for (DataSnapshot data : dataSnapshot.getChildren()){
                     Produkt produkt = data.getValue(Produkt.class);
@@ -80,6 +79,7 @@ public class IntoDatabase extends AppCompatActivity {
                         hashMap.put("productName", produkt.getProductName());
                         hashMap.put("productDescription", produkt.getProductDescription());
                         hashMap.put("packSize", produkt.getPackSize());
+                        hashMap.put("unit", produkt.getUnit());
                         hashMap.put("packageAmount", produkt.getPackageAmount());
                         hashMap.put("location", produkt.getLocation());
 

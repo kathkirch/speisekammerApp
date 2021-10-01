@@ -6,9 +6,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/WhiteSmoke"
-    tools:context=".Pantry">
+    tools:context=".ProductTable">
 
     <TextView
+        android:id="@+id/tvProductTable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/title_style"
@@ -18,12 +19,13 @@
         android:layout_marginEnd="6dp"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="6dp"
-        android:text="@string/speis"
+        android:text="@string/produktuebersicht"
         android:textColor="@color/white"
         android:gravity="center">
     </TextView>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/productRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="4dp"

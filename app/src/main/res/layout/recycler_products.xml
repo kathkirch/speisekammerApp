@@ -38,6 +38,19 @@
         </TextView>
 
         <TextView
+            android:id="@+id/tvUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/tVpSize"
+            android:text="@string/unit"
+            android:textSize="12sp"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"
+            android:maxLines="1">
+        </TextView>
+
+
+        <TextView
             android:id="@+id/tvPackAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
