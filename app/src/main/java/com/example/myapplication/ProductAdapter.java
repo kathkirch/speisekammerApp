@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,22 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.FirebaseDatabase;
+
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.firestore.DocumentSnapshot;
+
 
 public class ProductAdapter extends FirebaseRecyclerAdapter <Produkt, ProductAdapter.ProduktViewholder > {
 
 
     private OnItemClickListener listener;
 
-
-    /**
-     * Initialize a {@link RecyclerView.Adapter} that listens to a Firebase query. See
-     * {@link FirebaseRecyclerOptions} for configuration options.
-     *
-     * @param options
-     */
     public ProductAdapter(@NonNull FirebaseRecyclerOptions options) {
         super(options);
     }
@@ -82,8 +75,10 @@ public class ProductAdapter extends FirebaseRecyclerAdapter <Produkt, ProductAda
         @SuppressLint("SetTextI18n")
         public void bind (String name, String amount, String size, String unit){
             tvName.setText(name);
-            tvAmount.setText(amount + " " + tvAmount.getText().toString());
-            tvPackSize.setText(tvPackSize.getText().toString() + " " + size);
+            String amountString = amount + " Stück";
+            tvAmount.setText(amountString);
+            String packString = "a " + size;
+            tvPackSize.setText(packString);
             tvUnit.setText(unit);
         }
     }
@@ -97,6 +92,4 @@ public class ProductAdapter extends FirebaseRecyclerAdapter <Produkt, ProductAda
         this.listener = listener;
 
     }
-
-
 }

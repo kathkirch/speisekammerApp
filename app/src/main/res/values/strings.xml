@@ -34,4 +34,5 @@
     <string name="stueck">Stück</string>
     <string name="unit">unit</string>
     <string name="produktuebersicht">"Produktübersicht: "</string>
+    <string name="barcodescanner">Barcodescanner</string>
 </resources>

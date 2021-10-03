@@ -8,13 +8,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.database.DataSnapshot;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class HelperClass {
     public static final String PRODUKTNAME = "produktName";
@@ -28,8 +27,6 @@ public class HelperClass {
     private Query mQuery;
     ProductAdapter productAdapter;
 
-
-
     public void putInIntent (Produkt produkt, Intent intent) {
         intent.putExtra(PRODUKTNAME, produkt.getProductName());
         intent.putExtra(PRODUKTBESCHREIBUNG, produkt.getProductDescription());
@@ -38,6 +35,7 @@ public class HelperClass {
         intent.putExtra(UNIT, produkt.getUnit());
         intent.putExtra(LOCATION, produkt.getLocation());
         intent.putExtra(BARCODE, produkt.getBarcode());
+        System.out.println("put in Intent");
     }
 
     public ProductAdapter selectProducts (String location, View view, Context context){
@@ -57,4 +55,6 @@ public class HelperClass {
 
         return productAdapter;
     }
+
+
 }

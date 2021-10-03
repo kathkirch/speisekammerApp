@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myapplication">
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -12,32 +11,41 @@
         android:required="true" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="MyFoodi-Store"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/vorratskammer_layout"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ProductTable"></activity>
-        <activity android:name=".InsertProduct" />
+
+        <activity android:name=".ProductTable"
+            android:parentActivityName=".MainActivity"/>
+
+        <activity android:name=".InsertProduct" android:parentActivityName=".IntoDatabase" >
+            <intent-filter>
+                <action android:name="android.intent.action.ANSWER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".BarcodeScanner">
             <intent-filter>
-                <action android:name="android.intent.action.SEND_MULTIPLE" />
-
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".IntoDatabase">
+
+        <activity android:name=".IntoDatabase" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.SEND" />
             </intent-filter>
         </activity>
 

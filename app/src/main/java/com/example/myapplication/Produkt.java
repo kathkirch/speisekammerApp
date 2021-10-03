@@ -1,12 +1,6 @@
 package com.example.myapplication;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 
 public class Produkt implements Comparable <Produkt> {
 

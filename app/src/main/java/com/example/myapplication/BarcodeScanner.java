@@ -1,22 +1,28 @@
 package com.example.myapplication;
 
-import androidx.appcompat.app.AlertDialog;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultCaller;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.ActivityResultRegistry;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.app.Dialog;
-import android.content.DialogInterface;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
+
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -26,8 +32,13 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+
 
 public class BarcodeScanner extends AppCompatActivity {
 
@@ -40,15 +51,33 @@ public class BarcodeScanner extends AppCompatActivity {
     private String barcodeData;
     private Button checkBarcode;
     Intent intent;
+    private String location;
+
     public static final String BARCODE = "barcodeText";
     public static final String LOCATION = "location";
-    String location;
 
     private RadioButton pantry;
     private RadioButton pantryBoard;
     private RadioButton fridge;
     private RadioButton freezer;
 
+    /*
+    private String barcode;
+    private String productName;
+    private String productDescription;
+    private String packSize;
+    private String unit;
+    private double packageAmount;
+    private String location;
+
+    //ActivityResultLauncher<Intent> someActivityResultLauncher;
+
+    private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private static final DatabaseReference productNode = database.getReference("products");
+    DatabaseReference locationNode;
+    DatabaseReference barcodeNode;
+
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,22 +96,83 @@ public class BarcodeScanner extends AppCompatActivity {
         //Intent to start new Activity
         intent = new Intent (getApplicationContext(), IntoDatabase.class);
 
+
+        /*
+         someActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == InsertProduct.RESULT_OK) {
+
+                            System.out.println("r u doing heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+                            // There are no request codes
+                            Intent data = result.getData();
+
+                            Produkt produkt = pushIntentToProdukt(data);
+
+                            String locationString = produkt.getLocation();
+                            String barcodeString = produkt.getBarcode();
+
+                            locationNode = productNode.child(locationString);
+                            barcodeNode = locationNode.child(barcodeString);
+
+                            barcodeNode.setValue(produkt);
+
+                            Toast.makeText(getApplicationContext(), R.string.produkt_hinzugefuegt,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+         */
+
+
+
         //Listener for Button
         checkBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String loco = locationPicker();
-
                 String barcode = barcodeText.getText().toString();
                 intent.putExtra(LOCATION, loco);
                 intent.putExtra(BARCODE, barcode);
                 startActivity(intent);
+                //openSomeActivityForResult();
             }
         });
     }
 
+    /*
+    public void openSomeActivityForResult () {
+        Intent intent = new Intent(this, IntoDatabase.class);
+        String loco = locationPicker();
+        String barcode = barcodeText.getText().toString();
+        intent.putExtra(LOCATION, loco);
+        intent.putExtra(BARCODE, barcode);
+        someActivityResultLauncher.launch(intent);
+    }
 
+     */
+
+    /*
+    public Produkt pushIntentToProdukt (Intent data){
+
+        barcode = data.getStringExtra(HelperClass.BARCODE);
+        productName = data.getStringExtra(HelperClass.PRODUKTNAME);
+        productDescription = data.getStringExtra(HelperClass.PRODUKTBESCHREIBUNG);
+        packSize = data.getStringExtra(HelperClass.NETTOGEWICHT);
+        unit = data.getStringExtra(HelperClass.UNIT);
+        packageAmount = Double.parseDouble(data.getStringExtra(HelperClass.PRODUKTMENGE));
+        location = data.getStringExtra(HelperClass.LOCATION);
+
+        Produkt produkt = new Produkt(barcode, productName, productDescription, packSize,
+                unit, packageAmount, location);
+
+        return produkt;
+    }
+
+     */
     public String locationPicker (){
 
         if (pantry.isChecked()){
@@ -99,8 +189,6 @@ public class BarcodeScanner extends AppCompatActivity {
         }
         return  location;
     }
-
-
     private void initialiseDetectorsAndSources() {
 
         Toast.makeText(getApplicationContext(), "Barcode scanner started", Toast.LENGTH_SHORT).show();
@@ -149,7 +237,7 @@ public class BarcodeScanner extends AppCompatActivity {
             }
 
             @Override
-            public void receiveDetections(Detector.Detections<Barcode> detections) {
+            public void receiveDetections(@NotNull Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
                 if (barcodes.size() != 0) {
 

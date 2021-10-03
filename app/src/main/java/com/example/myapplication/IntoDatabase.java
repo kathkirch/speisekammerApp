@@ -1,35 +1,33 @@
 package com.example.myapplication;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
+import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.vision.barcode.Barcode;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 public class IntoDatabase extends AppCompatActivity {
 
@@ -38,15 +36,20 @@ public class IntoDatabase extends AppCompatActivity {
 
     private String receivingBarcode;
     private String loco;
+
     private boolean barcodeExist;
     private HashMap hashMap;
 
     private static final String TAG = "Info";
 
     boolean productKnowen;
-    DatabaseReference productNode;
 
-    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    ActivityResultLauncher<Intent> someActivityResultLauncher;
+
+    private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private static final DatabaseReference productNode = database.getReference("products");
+    DatabaseReference locationNode;
+    DatabaseReference barcodeNode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +59,12 @@ public class IntoDatabase extends AppCompatActivity {
         receivingBarcode = intent.getStringExtra(BarcodeScanner.BARCODE);
         loco = intent.getStringExtra(BarcodeScanner.LOCATION);
 
-        productNode = database.getReference("products");
-        DatabaseReference locationNode = productNode.child(loco);
+        locationNode = productNode.child(loco);
 
         locationNode.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
 
                 for (DataSnapshot data : dataSnapshot.getChildren()){
                     Produkt produkt = data.getValue(Produkt.class);
@@ -97,6 +98,59 @@ public class IntoDatabase extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "hier ging etwas schief", Toast.LENGTH_SHORT).show();
             }
         });
+
+        someActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            System.out.println("tttttttttttttttttttttttttttttttttttttttttttttt");
+
+                            Intent data = result.getData();
+
+                            Produkt produkt = pushIntentToProdukt(data);
+
+                            String locationString = produkt.getLocation();
+                            String barcodeString = produkt.getBarcode();
+
+                            DatabaseReference locationNode1 = productNode.child(locationString);
+                            DatabaseReference barcodeNode1 = locationNode1.child(barcodeString);
+
+                            barcodeNode1.setValue(produkt).addOnCanceledListener(new OnCanceledListener() {
+                                @Override
+                                public void onCanceled() {
+                                    System.out.println("FIREBASE ERROR!!!!");
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(@NonNull Void aVoid) {
+                                    Toast.makeText(getApplicationContext(), R.string.produkt_hinzugefuegt,
+                                            Toast.LENGTH_SHORT).show();
+                                    Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(mainIntent);
+                                }
+                            });
+                        }
+                    }
+                });
+    }
+
+    public Produkt pushIntentToProdukt (Intent data){
+
+        String barcode = data.getStringExtra(HelperClass.BARCODE);
+        String productName = data.getStringExtra(HelperClass.PRODUKTNAME);
+        String productDescription = data.getStringExtra(HelperClass.PRODUKTBESCHREIBUNG);
+        String packSize = data.getStringExtra(HelperClass.NETTOGEWICHT);
+        String unit = data.getStringExtra(HelperClass.UNIT);
+        double packageAmount = Double.parseDouble(data.getStringExtra(HelperClass.PRODUKTMENGE));
+        String location = data.getStringExtra(HelperClass.LOCATION);
+
+        Produkt produkt = new Produkt(barcode, productName, productDescription, packSize,
+                unit, packageAmount, location);
+
+        return produkt;
     }
 
     public boolean checkBarcode (String receivingBarcode, String barcodeDB) {
@@ -116,16 +170,21 @@ public class IntoDatabase extends AppCompatActivity {
         }
     }
 
-    public void newObjectInDatabase () {
-        Intent insertIntent = new Intent(getApplicationContext(), InsertProduct.class);
+    public void openSomeActivityForResult () {
+        Intent insertIntent = new Intent(this, InsertProduct.class);
         insertIntent.putExtra(LOCATION, loco);
         insertIntent.putExtra(BARCODE, receivingBarcode);
-        startActivity(insertIntent);
+
+        someActivityResultLauncher.launch(insertIntent);
+    }
+
+    public void newObjectInDatabase () {
+        openSomeActivityForResult();
     }
 
     public void updatePackageAmount () {
-        DatabaseReference locationNode = productNode.child(loco);
-        DatabaseReference barcodeNode = locationNode.child(receivingBarcode);
+        locationNode = productNode.child(loco);
+        barcodeNode = locationNode.child(receivingBarcode);
         barcodeNode.updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
