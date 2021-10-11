@@ -97,35 +97,6 @@ public class BarcodeScanner extends AppCompatActivity {
         intent = new Intent (getApplicationContext(), IntoDatabase.class);
 
 
-        /*
-         someActivityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == InsertProduct.RESULT_OK) {
-
-                            System.out.println("r u doing heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-                            // There are no request codes
-                            Intent data = result.getData();
-
-                            Produkt produkt = pushIntentToProdukt(data);
-
-                            String locationString = produkt.getLocation();
-                            String barcodeString = produkt.getBarcode();
-
-                            locationNode = productNode.child(locationString);
-                            barcodeNode = locationNode.child(barcodeString);
-
-                            barcodeNode.setValue(produkt);
-
-                            Toast.makeText(getApplicationContext(), R.string.produkt_hinzugefuegt,
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-         */
 
 
 
@@ -143,36 +114,6 @@ public class BarcodeScanner extends AppCompatActivity {
         });
     }
 
-    /*
-    public void openSomeActivityForResult () {
-        Intent intent = new Intent(this, IntoDatabase.class);
-        String loco = locationPicker();
-        String barcode = barcodeText.getText().toString();
-        intent.putExtra(LOCATION, loco);
-        intent.putExtra(BARCODE, barcode);
-        someActivityResultLauncher.launch(intent);
-    }
-
-     */
-
-    /*
-    public Produkt pushIntentToProdukt (Intent data){
-
-        barcode = data.getStringExtra(HelperClass.BARCODE);
-        productName = data.getStringExtra(HelperClass.PRODUKTNAME);
-        productDescription = data.getStringExtra(HelperClass.PRODUKTBESCHREIBUNG);
-        packSize = data.getStringExtra(HelperClass.NETTOGEWICHT);
-        unit = data.getStringExtra(HelperClass.UNIT);
-        packageAmount = Double.parseDouble(data.getStringExtra(HelperClass.PRODUKTMENGE));
-        location = data.getStringExtra(HelperClass.LOCATION);
-
-        Produkt produkt = new Produkt(barcode, productName, productDescription, packSize,
-                unit, packageAmount, location);
-
-        return produkt;
-    }
-
-     */
     public String locationPicker (){
 
         if (pantry.isChecked()){

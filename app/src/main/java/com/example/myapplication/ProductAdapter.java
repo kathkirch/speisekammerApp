@@ -1,25 +1,38 @@
 package com.example.myapplication;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class ProductAdapter extends FirebaseRecyclerAdapter <Produkt, ProductAdapter.ProduktViewholder > {
 
 
     private OnItemClickListener listener;
+
+    final HelperClass hp = new HelperClass();
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    final DatabaseReference shoppingListNode = database.getReference("shoppinglist");
 
     public ProductAdapter(@NonNull FirebaseRecyclerOptions options) {
         super(options);
@@ -83,6 +96,24 @@ public class ProductAdapter extends FirebaseRecyclerAdapter <Produkt, ProductAda
         }
     }
 
+    public void setItemZero (int position){
+        DatabaseReference myRef = getSnapshots().getSnapshot(position).getRef();
+        DataSnapshot produktSnap = getSnapshots().getSnapshot(position);
+        Produkt myProdukt = produktSnap.getValue(Produkt.class);
+        myProdukt.setPackageAmount(0);
+        HashMap hashMap = hp.produktToHashMap(myProdukt);
+        myRef.updateChildren(hashMap);
+    }
+
+    public void productToShoppingList (int position) {
+        DataSnapshot produktSnap = getSnapshots().getSnapshot(position);
+        Produkt produkt = produktSnap.getValue(Produkt.class);
+        EinkaufslistProdukt eklP = new EinkaufslistProdukt(hp.createDate(), produkt, EinkaufslistProdukt.unchecked);
+        DatabaseReference dateRef = shoppingListNode.child(eklP.getInsertDate());
+        if (produkt.getProductDescription() != null) {
+            dateRef.setValue(eklP);
+        }
+    }
 
     public interface OnItemClickListener {
         void onItemClick (DataSnapshot dataSnapshot, int postition);

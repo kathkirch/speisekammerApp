@@ -39,13 +39,13 @@ public class InsertProduct extends AppCompatActivity {
     private double proAmount;
     private String proLocation;
 
-    public static final String PRODUKTNAME_NEW = "produktName";
-    public static final String PRODUKTBESCHREIBUNG_NEW = "produktBeschreibung";
-    public static final String NETTOGEWICHT_NEW = "nettogewicht";
-    public static final String UNIT_NEW = "unit";
-    public static final String PRODUKTMENGE_NEW = "produktmenge";
-    public static final String LOCATION_NEW = "location";
-    public static final String BARCODE_NEW = "barcode";
+    public static final String PRODUKTNAME_NEW = "produktName_new";
+    public static final String PRODUKTBESCHREIBUNG_NEW = "produktBeschreibung_new";
+    public static final String NETTOGEWICHT_NEW = "nettogewicht_new";
+    public static final String UNIT_NEW = "unit_new";
+    public static final String PRODUKTMENGE_NEW = "produktmenge_new";
+    public static final String LOCATION_NEW = "location_new";
+    public static final String BARCODE_NEW = "barcode_new";
 
     private String loco;
 
@@ -55,7 +55,7 @@ public class InsertProduct extends AppCompatActivity {
     public static final String LOCATION_CHANGE = "locationChange";
     public static final String CHANGE_AMOUNT = "amountChange";
 
-    private final String [] array_Units = new String [] {"l", "ml", "g", "kg"};
+    private final String [] array_Units = new String [] {"-", "l", "ml", "g", "kg"};
 
     private final String [] array_locations = new String [] {"Speis", "Vorratsschrank", "Kühlschrank",
                                                         "Gefrierschrank"};
@@ -151,18 +151,15 @@ public class InsertProduct extends AppCompatActivity {
         HelperClass hp = new HelperClass();
         Intent produkt_data = new Intent();
 
-        if (!checkData()){
+        if (!checkData() && (!spUnits.getSelectedItem().equals("-"))){
 
             setResult(RESULT_CANCELED, produkt_data);
             Toast.makeText(getApplicationContext(), R.string.alleFelderAusfuellen_warnung,
                     Toast.LENGTH_SHORT).show();
 
         } else {
-            System.out.println("yoooooooooooooooooouuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
 
             if (intent.hasExtra(IntoDatabase.BARCODE)) {
-
-                System.out.println("1111111111111111111111111111111111111111111111111111111111111111111");
 
                 getValues();
 
@@ -179,8 +176,6 @@ public class InsertProduct extends AppCompatActivity {
                     && (! intent.getStringExtra(HelperClass.PRODUKTMENGE)
                     .equals(pAmount.getText().toString()))) {
 
-                System.out.println("2222222222222222222222222222222222222222222222222222222222222222222222222");
-
                 String barcode = intent.getStringExtra(HelperClass.BARCODE);
 
                 getValues();
@@ -191,12 +186,11 @@ public class InsertProduct extends AppCompatActivity {
                 hp.putInIntent(produktToUpdate, produkt_data);
                 produkt_data.putExtra(CHANGE_AMOUNT, true);
                 setResult(RESULT_OK, produkt_data);
+                finish();
 
             }
             else if ( ! intent.getStringExtra(HelperClass.LOCATION)
                     .equals(spLocation.getSelectedItem().toString())){
-
-                System.out.println("333333333333333333333333333333333333333333333333333333333333333333333");
 
                 getValues();
 
@@ -206,7 +200,7 @@ public class InsertProduct extends AppCompatActivity {
                 double amountOld = Double.parseDouble(intent.getStringExtra(HelperClass.PRODUKTMENGE));
                 double amountNew = Double.parseDouble(pAmount.getText().toString());
 
-                if (amountOld > amountNew) {
+                if (amountOld < amountNew) {
                     Toast.makeText(getApplicationContext(), "die Anzahl die du verschieben " +
                             "moechtest muss kleiner sein!", Toast.LENGTH_LONG).show();
                     setResult(Activity.RESULT_CANCELED, produkt_data);
@@ -223,51 +217,47 @@ public class InsertProduct extends AppCompatActivity {
                     produkt_data.putExtra(PRODUKTBESCHREIBUNG_NEW, proDescription);
                     produkt_data.putExtra(NETTOGEWICHT_NEW, proSize);
                     produkt_data.putExtra(UNIT_NEW, proUnit);
-                    produkt_data.putExtra(PRODUKTMENGE_NEW, proAmount);
+                    produkt_data.putExtra(PRODUKTMENGE_NEW, String.valueOf(proAmount));
                     produkt_data.putExtra(LOCATION_NEW, proLocation);
 
                     produkt_data.putExtra(LOCATION_CHANGE, true);
                     setResult(RESULT_OK, produkt_data);
+                    finish();
                 }
-            } else {
-                System.out.println("noooooooooooooooooooooooooooooooooooooooooooooooooooooothing?");
-                Toast.makeText(getApplicationContext(), R.string.produkt_nicht_gespeichert,
-                        Toast.LENGTH_SHORT).show();
             }
         }
-        //finish();
     }
 
     public void getValues () {
-
         proName = pName.getText().toString();
         proDescription = pDescription.getText().toString();
         proSize = (pSize.getText().toString());
         proUnit = spUnits.getSelectedItem().toString();
         proAmount = Double.parseDouble(pAmount.getText().toString());
         proLocation = spLocation.getSelectedItem().toString();
-
     }
 
     public int getUnitSelection (String unit){
         int index;
 
         switch (unit){
-            case "l" :
+            case "-" :
                 index = 0;
                 return index;
-            case "ml" :
+            case "l" :
                 index = 1;
                 return index;
-            case "g" :
+            case "ml" :
                 index = 2;
                 return index;
-            case "kg" :
+            case "g" :
                 index = 3;
+                return index;
+            case "kg" :
+                index = 4;
                 return index;
             default :
                 return 0;
         }
     }
-
 }

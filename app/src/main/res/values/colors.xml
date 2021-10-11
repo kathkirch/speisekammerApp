@@ -44,7 +44,7 @@
     <color name="OldLace">#FDF5E6</color>
 
     <color name="Linen">#FAF0E6</color>
-    <color name="AntiqueWhite">#FAEBD7</color>
+
     <color name="Salmon">#FA8072</color>
     <color name="GhostWhite">#F8F8FF</color>
     <color name="MintCream">#F5FFFA</color>
@@ -139,8 +139,12 @@
     <color name="Black">#000000</color>
 
     <color name="background_green">#E2FFE0</color>
+    <color name="background">#FAEBD7</color>
 
+    <color name="black_opacy">#99000000</color>
+    <color name="white_opacy">#1AFFFFFF</color>
 
+    <color name="mygrean">#0c5c40</color>
     <color name="MySeaGreen">#3DB309</color>
     <color name="GreenYellow">#ADFF2F</color>
     <color name="Turquoise">#40E0D0</color>

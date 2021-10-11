@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@color/WhiteSmoke">
+    android:background="@color/LightGrey">
 
     <TextView
         android:id="@+id/tv_title"
@@ -46,16 +46,16 @@
         android:textSize="25sp"
         android:padding="5dp"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/bt_check_barcode"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/radioGroup"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="30dp"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/check_symbol"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/checker"
         android:gravity="center_horizontal" />
 
     <TextView

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myapplication">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -11,43 +13,47 @@
         android:required="true" />
 
     <application
-        android:allowBackup="false"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="MyFoodi-Store"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/vorratskammer_layout"
         android:usesCleartextTraffic="true">
-
-        <activity android:name=".ProductTable"
-            android:parentActivityName=".MainActivity"/>
-
-        <activity android:name=".InsertProduct" android:parentActivityName=".IntoDatabase" >
-            <intent-filter>
-                <action android:name="android.intent.action.ANSWER" />
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+        <activity android:name=".EinkaufslisteTable">
         </activity>
-
+        <activity android:name=".ProductTable" />
+        <activity
+            android:name=".InsertProduct"
+            android:parentActivityName=".IntoDatabase">
+        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".BarcodeScanner" />
+        <activity android:name=".IntoDatabase" />
 
-        <activity android:name=".BarcodeScanner">
+        <service android:name=".Notifications">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.RESPOND_VIA_MESSAGE">
+                </action>
             </intent-filter>
-        </activity>
+        </service>
 
-        <activity android:name=".IntoDatabase" >
+        <receiver
+            android:name=".BootReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="BootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </activity>
+        </receiver>
+
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"

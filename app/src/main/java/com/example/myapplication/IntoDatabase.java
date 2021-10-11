@@ -18,7 +18,6 @@ import android.os.Bundle;
 
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import com.google.firebase.database.DataSnapshot;
@@ -40,8 +39,6 @@ public class IntoDatabase extends AppCompatActivity {
     private boolean barcodeExist;
     private HashMap hashMap;
 
-    private static final String TAG = "Info";
-
     boolean productKnowen;
 
     ActivityResultLauncher<Intent> someActivityResultLauncher;
@@ -50,6 +47,8 @@ public class IntoDatabase extends AppCompatActivity {
     private static final DatabaseReference productNode = database.getReference("products");
     DatabaseReference locationNode;
     DatabaseReference barcodeNode;
+
+    final HelperClass hp = new HelperClass();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,33 +64,22 @@ public class IntoDatabase extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                productKnowen = false;
                 for (DataSnapshot data : dataSnapshot.getChildren()){
                     Produkt produkt = data.getValue(Produkt.class);
                     String barcodeDB = produkt.getBarcode();
 
                     if (checkBarcode(receivingBarcode, barcodeDB)) {
 
-                        hashMap = new HashMap();
                         double newPackageAmount = produkt.getPackageAmount() + 1;
                         produkt.setPackageAmount(newPackageAmount);
 
-                        hashMap.put("barcode", produkt.getBarcode());
-                        hashMap.put("productName", produkt.getProductName());
-                        hashMap.put("productDescription", produkt.getProductDescription());
-                        hashMap.put("packSize", produkt.getPackSize());
-                        hashMap.put("unit", produkt.getUnit());
-                        hashMap.put("packageAmount", produkt.getPackageAmount());
-                        hashMap.put("location", produkt.getLocation());
+                        hashMap = hp.produktToHashMap(produkt);
 
                         productKnowen = true;
-                        operateOnDatabase(productKnowen);
-                    }
-                    else {
-                        productKnowen = false;
-                        operateOnDatabase(productKnowen);
                     }
                 }
+                operateOnDatabase(productKnowen);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -104,13 +92,10 @@ public class IntoDatabase extends AppCompatActivity {
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-                        System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
                         if (result.getResultCode() == Activity.RESULT_OK) {
-                            System.out.println("tttttttttttttttttttttttttttttttttttttttttttttt");
-
                             Intent data = result.getData();
 
-                            Produkt produkt = pushIntentToProdukt(data);
+                            Produkt produkt = hp.pushIntentToProdukt(data);
 
                             String locationString = produkt.getLocation();
                             String barcodeString = produkt.getBarcode();
@@ -118,12 +103,7 @@ public class IntoDatabase extends AppCompatActivity {
                             DatabaseReference locationNode1 = productNode.child(locationString);
                             DatabaseReference barcodeNode1 = locationNode1.child(barcodeString);
 
-                            barcodeNode1.setValue(produkt).addOnCanceledListener(new OnCanceledListener() {
-                                @Override
-                                public void onCanceled() {
-                                    System.out.println("FIREBASE ERROR!!!!");
-                                }
-                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            barcodeNode1.setValue(produkt).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(@NonNull Void aVoid) {
                                     Toast.makeText(getApplicationContext(), R.string.produkt_hinzugefuegt,
@@ -132,25 +112,12 @@ public class IntoDatabase extends AppCompatActivity {
                                     startActivity(mainIntent);
                                 }
                             });
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.produkt_nicht_gespeichert,
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-    }
-
-    public Produkt pushIntentToProdukt (Intent data){
-
-        String barcode = data.getStringExtra(HelperClass.BARCODE);
-        String productName = data.getStringExtra(HelperClass.PRODUKTNAME);
-        String productDescription = data.getStringExtra(HelperClass.PRODUKTBESCHREIBUNG);
-        String packSize = data.getStringExtra(HelperClass.NETTOGEWICHT);
-        String unit = data.getStringExtra(HelperClass.UNIT);
-        double packageAmount = Double.parseDouble(data.getStringExtra(HelperClass.PRODUKTMENGE));
-        String location = data.getStringExtra(HelperClass.LOCATION);
-
-        Produkt produkt = new Produkt(barcode, productName, productDescription, packSize,
-                unit, packageAmount, location);
-
-        return produkt;
     }
 
     public boolean checkBarcode (String receivingBarcode, String barcodeDB) {
@@ -174,7 +141,6 @@ public class IntoDatabase extends AppCompatActivity {
         Intent insertIntent = new Intent(this, InsertProduct.class);
         insertIntent.putExtra(LOCATION, loco);
         insertIntent.putExtra(BARCODE, receivingBarcode);
-
         someActivityResultLauncher.launch(insertIntent);
     }
 
@@ -188,7 +154,7 @@ public class IntoDatabase extends AppCompatActivity {
         barcodeNode.updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(getApplicationContext(), "Produkt wurde aktualisiert",
+                Toast.makeText(getApplicationContext(), R.string.produkt_aktualisiert,
                         Toast.LENGTH_SHORT).show();
                 Intent mainIntent = new Intent(IntoDatabase.this, MainActivity.class);
                 startActivity(mainIntent);
