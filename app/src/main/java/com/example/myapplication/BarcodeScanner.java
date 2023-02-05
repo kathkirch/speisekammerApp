@@ -1,19 +1,30 @@
 package com.example.myapplication;
 
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultCaller;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.ActivityResultRegistry;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
+
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +32,13 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+
 
 public class BarcodeScanner extends AppCompatActivity {
 
@@ -35,8 +51,35 @@ public class BarcodeScanner extends AppCompatActivity {
     private String barcodeData;
     private Button checkBarcode;
     Intent intent;
-    public static final String BARCODE = "barcodeText";
+    private String location;
+    private Button noBarcode;
 
+    public static final String BARCODE = "barcodeText";
+    public static final String LOCATION = "location";
+    public static final String ISBARCODE = "isBarcode";
+
+    private RadioButton pantry;
+    private RadioButton pantryBoard;
+    private RadioButton fridge;
+    private RadioButton freezer;
+
+    /*
+    private String barcode;
+    private String productName;
+    private String productDescription;
+    private String packSize;
+    private String unit;
+    private double packageAmount;
+    private String location;
+
+    //ActivityResultLauncher<Intent> someActivityResultLauncher;
+
+    private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private static final DatabaseReference productNode = database.getReference("products");
+    DatabaseReference locationNode;
+    DatabaseReference barcodeNode;
+
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,19 +89,68 @@ public class BarcodeScanner extends AppCompatActivity {
         surfaceView = findViewById(R.id.surface_view);
         barcodeText = findViewById(R.id.barcode_text);
         checkBarcode = findViewById(R.id.bt_check_barcode);
+        noBarcode = findViewById(R.id.btNObarcode);
+
+        pantry = findViewById(R.id.radioPantry);
+        pantryBoard = findViewById(R.id.radioPantryBoard);
+        fridge = findViewById(R.id.radioFridge);
+        freezer = findViewById(R.id.radioFreezer);
 
         //Intent to start new Activity
         intent = new Intent (getApplicationContext(), IntoDatabase.class);
 
-        //Listener for Button
-        checkBarcode.setOnClickListener(new View.OnClickListener() {
+
+        //Listener for Button to add product without barcode
+        noBarcode.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                String barcode = barcodeText.getText().toString();
-                intent.putExtra(BARCODE, barcode);
+                String loco = locationPicker();
+                boolean isBarcode = false;
+                intent.putExtra(LOCATION, loco);
+                intent.putExtra(ISBARCODE, isBarcode);
                 startActivity(intent);
             }
         });
+
+        //Listener for Button to add product with barcode
+        checkBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String loco = locationPicker();
+                String barcode = barcodeText.getText().toString();
+
+                intent.putExtra(LOCATION, loco);
+                intent.putExtra(BARCODE, barcode);
+
+                if (location.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Bitte Lagerort wählen", Toast.LENGTH_SHORT).show();
+                } else if (barcode.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Bitte Barcode scannen", Toast.LENGTH_SHORT).show();
+                } else if (!location.isEmpty() && !barcode.isEmpty()){
+                    startActivity(intent);
+                }
+            }
+        });
+    }
+
+    public String locationPicker (){
+
+        location = "";
+
+        if (pantry.isChecked()){
+            location = "Speis";
+        }
+        else if (pantryBoard.isChecked()){
+            location = "Vorratsschrank";
+        }
+        else if (fridge.isChecked()){
+            location = "Kühlschrank";
+        }
+        else if (freezer.isChecked()){
+            location = "Gefrierschrank";
+        }
+        return  location;
     }
 
     private void initialiseDetectorsAndSources() {
@@ -109,7 +201,7 @@ public class BarcodeScanner extends AppCompatActivity {
             }
 
             @Override
-            public void receiveDetections(Detector.Detections<Barcode> detections) {
+            public void receiveDetections(@NotNull Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
                 if (barcodes.size() != 0) {
 
@@ -127,6 +219,8 @@ public class BarcodeScanner extends AppCompatActivity {
                             }
                         }
                     });
+                } else {
+                    barcodeText.setText("");
                 }
             }
         });

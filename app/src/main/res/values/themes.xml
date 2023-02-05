@@ -22,7 +22,7 @@
         <item name="colorPrimaryVariant">@color/DarkSeaGreen</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/ForestGreen</item>
+        <item name="colorSecondary">@color/mygrean</item>
         <item name="colorSecondaryVariant">@color/DarkSlateGray</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->

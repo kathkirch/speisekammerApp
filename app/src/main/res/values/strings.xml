@@ -1,27 +1,46 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="kuehlschrank">Kuehlschrank</string>
-    <string name="tiefkuehler">Tiefkuehler</string>
+
+    <string name="tiefkuehler">Tiefkühler</string>
     <string name="neu">NEU</string>
-    <string name="speis">Speis</string>
-    <string name="vorratsschrank">Vorratsschrank</string>
     <string name="willkommen_in_deiner_vorratskammer">Willkommen in deiner Vorratskammer</string>
     <string name="title_activity_into_database">IntoDatabase</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
     -->
-    <string name="hello_world">Hello Square World!</string>
     <string name="speichern">speichern</string>
     <string name="ort">Ort:</string>
     <string name="menge">Menge:</string>
     <string name="packungsgroesse">Packungsgröße:</string>
     <string name="neues_produkt_hinzufuegen">neues Produkt hinzufügen</string>
     <string name="wie_viel_packungen">wie viele Packungen?</string>
-    <string name="produktbezeichnung">Produktbezeichnung</string>
     <string name="produkt_beschreibung">Produkt- beschreibung:</string>
     <string name="was_ist_drinn">Was ist drinn?</string>
     <string name="wie_viel_ist_drinn">Wie viel ist drinn?</string>
     <string name="produktname">Produktname:</string>
     <string name="alleFelderAusfuellen_warnung">es müssen alle Felder ausgefüllt werden</string>
+    <string name="speis">Speis</string>
+    <string name="vorratsschrank">Vorratsschrank</string>
+    <string name="kuehlschrank">Kühlschrank</string>
+    <string name="gefrierschrank">Gefrierschrank</string>
+    <string name="produkt_hinzugefuegt">Produkt hinzugefügt</string>
+    <string name="produkt_nicht_gespeichert">Produkt konnte nicht gespeichert werden</string>
+    <string name="products">products</string>
+    <string name="netto_gewicht">Nettogewicht</string>
+    <string name="ort_auswaehlen">Ort auswählen</string>
+    <string name="produktbezeichnung">Produktbezeichnung</string>
+    <string name="a">a</string>
+    <string name="stueck">Stück</string>
+    <string name="unit">unit</string>
+    <string name="produktuebersicht">"Produktübersicht: "</string>
+    <string name="barcodescanner">Barcodescanner</string>
+    <string name="produkt_aktualisiert">Produkt wurde aktualisiert</string>
+    <string name="einkaufsliste">Einkaufsliste</string>
+    <string name="liste_geloescht">Liste gelöscht</string>
+    <string name="hier_produkt_eingeben">hier Produkt eingeben</string>
+    <string name="produkt_der_einkaufsliste_hinzufuegen">Produkt der Einkaufsliste hinzufügen</string>
+    <string name="barcode_text">Barcode Text</string>
+    <string name="kein_barcode">Kein Barcode</string>
+
 </resources>

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="@color/LightGoldenrodYellow"
+    android:background="@color/LightGrey"
     tools:context=".InsertProduct">
 
     <LinearLayout
@@ -13,37 +12,38 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="380dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/title_style"
             android:textColor="@color/white"
             android:textSize="30sp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="30dp"
-            android:padding="4dp"
+            android:padding="6dp"
             android:gravity="center"
             android:layout_gravity="center"
             android:text="@string/neues_produkt_hinzufuegen"
         />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
             android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="8dp">
 
             <TextView
-                android:layout_width="200dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="22sp"
+                android:gravity="center_vertical"
+                android:textSize="18sp"
                 android:padding="4dp"
                 android:text="@string/produktname"/>
 
             <EditText
                 android:id="@+id/eTpName"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:inputType="text"
                 android:hint="@string/produktbezeichnung"
                 android:importantForAutofill="no" />
@@ -51,74 +51,83 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
             android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="8dp">
 
             <TextView
-                android:layout_width="200dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="22sp"
+                android:gravity="center_vertical"
+                android:textSize="18sp"
                 android:padding="4dp"
                 android:text="@string/produkt_beschreibung"/>
 
 
             <EditText
                 android:id="@+id/eTpDesc"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:inputType="text"
                 android:hint="@string/was_ist_drinn"
-                android:padding="4dp"
                 android:importantForAutofill="no" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="60dp"
             android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="8dp">
 
             <TextView
-                android:layout_width="200dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="22sp"
+                android:gravity="center_vertical"
+                android:textSize="18sp"
                 android:padding="4dp"
                 android:text="@string/packungsgroesse"/>
 
             <EditText
                 android:id="@+id/eTpSize"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:inputType="number"
-                android:hint="@string/wie_viel_ist_drinn"
+                android:hint="@string/netto_gewicht"
                 android:padding="4dp"
                 android:importantForAutofill="no" />
+
+            <Spinner
+                android:id="@+id/spUnits"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </Spinner>
+
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="70dp"
             android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="8dp">
 
 
             <TextView
-                android:layout_width="200dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="22sp"
+                android:gravity="center_vertical"
+                android:textSize="18sp"
                 android:padding="4dp"
                 android:text="@string/menge"/>
 
             <EditText
                 android:id="@+id/eTpAmount"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:inputType="numberDecimal"
                 android:padding="4dp"
@@ -128,22 +137,23 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
             android:orientation="horizontal"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="8dp">
 
             <TextView
-                android:layout_width="200dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="22sp"
+                android:gravity="center_vertical"
+                android:textSize="18sp"
                 android:padding="4dp"
                 android:text="@string/ort"/>
 
             <Spinner
                 android:id="@+id/spLocation"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 />
 

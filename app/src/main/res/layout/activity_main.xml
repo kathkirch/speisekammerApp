@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:backgroundTint="@color/LightGoldenrodYellow">
+    android:background="@color/LightGrey">
 
 
     <androidx.appcompat.widget.AppCompatButton
@@ -18,8 +17,8 @@
         android:background="@drawable/button_style_home"
         android:layout_marginRight="50dp"
         android:drawableEnd="@drawable/new_food"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
         android:textStyle="bold"
         android:textSize="20sp"
         android:text="@string/neu" />
@@ -34,7 +33,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:textStyle="bold"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="15dp"
         android:background="@drawable/button_style_home"
         android:drawableEnd="@drawable/ic_kuehlschrank"
         android:padding="10dp"
@@ -58,7 +57,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="15dp"
         android:text="@string/tiefkuehler"
         android:drawableEnd="@drawable/freezer_icon" />
 
@@ -76,7 +75,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="15dp"
         android:text="@string/speis"
         android:drawableEnd="@drawable/ic_pantryy" />
 
@@ -97,5 +96,21 @@
         android:layout_marginBottom="25dp"
         android:text="@string/vorratsschrank"
         android:drawableEnd="@drawable/ic_vorratskastl" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_einkaufsliste"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:textColor="@color/White"
+        android:background="@drawable/button_style_home"
+        android:layout_below="@id/button_vorratsschrank"
+        android:textStyle="bold"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="25dp"
+        android:text="@string/einkaufsliste"
+        android:drawableEnd="@drawable/shopping_list_icon" />
 
 </RelativeLayout>

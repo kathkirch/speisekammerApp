@@ -4,17 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/LightGrey">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:layout_marginTop="10dp"
+        android:textSize="22sp"
+        android:textColor="@color/white"
+        android:text="@string/barcodescanner"
+        android:gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/title_style">
+    </TextView>
 
     <SurfaceView
         android:id="@+id/surface_view"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="202dp"
+        android:layout_below="@id/tv_title"
+        android:layout_marginTop="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="100dp"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/barcode_text"
@@ -24,21 +40,98 @@
         android:layout_marginRight="30dp"
         android:layout_below="@+id/surface_view"
         app:layout_constraintTop_toBottomOf="@id/surface_view"
-        android:layout_marginTop="50dp"
-        android:text="Barcode Text"
+        android:layout_marginTop="30dp"
+        android:text="@string/barcode_text"
+        android:textColor="@color/black"
         android:textSize="25sp"
         android:padding="5dp"/>
 
-    <Button
-        android:id="@+id/bt_check_barcode"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_toEndOf="@id/barcode_text"
-        android:layout_marginStart="30dp"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btNObarcode"
+        android:layout_width="208dp"
+        android:layout_height="59dp"
+        android:layout_below="@id/radioGroup"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
-        android:layout_below="@+id/surface_view"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/check_symbol"
+        android:background="@drawable/title_style"
+        android:text="@string/kein_barcode"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_check_barcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/radioGroup"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/checker"
         android:gravity="center_horizontal" />
+
+    <TextView
+        android:id="@+id/tv_location_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:layout_marginTop="10dp"
+        android:textSize="22sp"
+        android:textColor="@color/white"
+        android:text="@string/ort_auswaehlen"
+        android:gravity="center"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/title_style"
+        android:layout_below="@+id/barcode_text">
+    </TextView>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_location_check"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center">
+
+        <RadioButton
+            android:id="@+id/radioPantry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:text="@string/speis" />
+
+        <RadioButton
+            android:id="@+id/radioPantryBoard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:text="@string/vorratsschrank" />
+
+        <RadioButton
+            android:id="@+id/radioFridge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:text="@string/kuehlschrank" />
+
+        <RadioButton
+            android:id="@+id/radioFreezer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:text="@string/gefrierschrank" />
+
+    </RadioGroup>
+
+
+
 
 </RelativeLayout>
