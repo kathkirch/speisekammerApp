@@ -38,6 +38,8 @@ public class Notifications extends Service  {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+
+        /*
         listNode.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -64,6 +66,10 @@ public class Notifications extends Service  {
 
             }
         });
+
+         */
+
+
 
         return START_REDELIVER_INTENT;
     }
@@ -93,6 +99,8 @@ public class Notifications extends Service  {
     @Override
     public IBinder onBind(Intent intent) {
 
+
+        /*
         listNode.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -119,6 +127,10 @@ public class Notifications extends Service  {
 
             }
         });
+
+         */
+
+
 
         return null;
     }

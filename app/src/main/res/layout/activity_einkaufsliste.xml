@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,27 +13,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/title_style"
-        android:textSize="24sp"
+        android:gravity="center"
         android:padding="6dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:text="Einkaufsliste"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/einkaufsliste"
         android:textColor="@color/white"
-        android:gravity="center">
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023"
+        tools:layout_editor_absoluteX="-3dp">
+
     </TextView>
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/shoppingListRecycler"
-        android:layout_width="match_parent"
+    <ScrollView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
-        tools:listitem="@layout/recycler_shoppinglist">
-    </androidx.recyclerview.widget.RecyclerView>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvShoppingListTable">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/shoppingListRecycler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            tools:listitem="@layout/recycler_shoppinglist">
+        </androidx.recyclerview.widget.RecyclerView>
+    </ScrollView>
+
+
+
+
+
 
     <com.example.myapplication.MovableFloatingActionButton
         android:id="@+id/mfbDelete"
@@ -41,7 +56,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="@dimen/cardview_compat_inset_shadow"
-        android:src="@drawable/delete_image">
+        android:src="@drawable/delete_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.994">
     </com.example.myapplication.MovableFloatingActionButton>
 
     <com.example.myapplication.MovableFloatingActionButton
@@ -49,11 +70,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:layout_margin="@dimen/box_inset_layout_padding"
         android:src="@drawable/add_product"
-        android:layout_margin="@dimen/box_inset_layout_padding">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.188"
+        app:layout_constraintStart_toEndOf="@+id/mfbDelete"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.992">
     </com.example.myapplication.MovableFloatingActionButton>
 
-
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,9 @@ public class ProductAdapter extends FirebaseRecyclerAdapter <Produkt, ProductAda
 
     final HelperClass hp = new HelperClass();
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+
+
     final DatabaseReference shoppingListNode = database.getReference("shoppinglist");
 
     public ProductAdapter(@NonNull FirebaseRecyclerOptions options) {
@@ -114,6 +118,7 @@ public class ProductAdapter extends FirebaseRecyclerAdapter <Produkt, ProductAda
             dateRef.setValue(eklP);
         }
     }
+
 
     public interface OnItemClickListener {
         void onItemClick (DataSnapshot dataSnapshot, int postition);

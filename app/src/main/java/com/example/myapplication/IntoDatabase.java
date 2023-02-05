@@ -55,37 +55,50 @@ public class IntoDatabase extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        receivingBarcode = intent.getStringExtra(BarcodeScanner.BARCODE);
-        loco = intent.getStringExtra(BarcodeScanner.LOCATION);
+        boolean isBarcode = intent.getBooleanExtra(BarcodeScanner.ISBARCODE, false);
 
-        locationNode = productNode.child(loco);
+        if (isBarcode){
+            receivingBarcode = intent.getStringExtra(BarcodeScanner.BARCODE);
+            loco = intent.getStringExtra(BarcodeScanner.LOCATION);
 
-        locationNode.addListenerForSingleValueEvent(new ValueEventListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                productKnowen = false;
-                for (DataSnapshot data : dataSnapshot.getChildren()){
-                    Produkt produkt = data.getValue(Produkt.class);
-                    String barcodeDB = produkt.getBarcode();
+            locationNode = productNode.child(loco);
 
-                    if (checkBarcode(receivingBarcode, barcodeDB)) {
+            locationNode.addListenerForSingleValueEvent(new ValueEventListener() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    productKnowen = false;
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        Produkt produkt = data.getValue(Produkt.class);
+                        String barcodeDB = produkt.getBarcode();
 
-                        double newPackageAmount = produkt.getPackageAmount() + 1;
-                        produkt.setPackageAmount(newPackageAmount);
+                        if (checkBarcode(receivingBarcode, barcodeDB)) {
 
-                        hashMap = hp.produktToHashMap(produkt);
+                            double newPackageAmount = produkt.getPackageAmount() + 1;
+                            produkt.setPackageAmount(newPackageAmount);
 
-                        productKnowen = true;
+                            hashMap = hp.produktToHashMap(produkt);
+
+                            productKnowen = true;
+                        }
                     }
+                    operateOnDatabase(productKnowen);
                 }
-                operateOnDatabase(productKnowen);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(), "hier ging etwas schief", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(getApplicationContext(), "hier ging etwas schief", Toast.LENGTH_SHORT).show();
+                }
+            });
+            
+        } else {
+            loco = intent.getStringExtra(BarcodeScanner.LOCATION);
+
+            locationNode = productNode.child(loco);
+        }
+
+
+
+
 
         someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),

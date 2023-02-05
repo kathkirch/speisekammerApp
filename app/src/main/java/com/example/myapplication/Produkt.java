@@ -12,6 +12,8 @@ public class Produkt implements Comparable <Produkt> {
     private String unit;
     private String location;
 
+    boolean isBarcode;
+
 
     public Produkt (){
 

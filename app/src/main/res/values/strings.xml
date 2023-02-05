@@ -40,4 +40,7 @@
     <string name="liste_geloescht">Liste gelöscht</string>
     <string name="hier_produkt_eingeben">hier Produkt eingeben</string>
     <string name="produkt_der_einkaufsliste_hinzufuegen">Produkt der Einkaufsliste hinzufügen</string>
+    <string name="barcode_text">Barcode Text</string>
+    <string name="kein_barcode">Kein Barcode</string>
+
 </resources>

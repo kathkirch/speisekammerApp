@@ -41,10 +41,23 @@
         android:layout_below="@+id/surface_view"
         app:layout_constraintTop_toBottomOf="@id/surface_view"
         android:layout_marginTop="30dp"
-        android:text="Barcode Text"
+        android:text="@string/barcode_text"
         android:textColor="@color/black"
         android:textSize="25sp"
         android:padding="5dp"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btNObarcode"
+        android:layout_width="208dp"
+        android:layout_height="59dp"
+        android:layout_below="@id/radioGroup"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/title_style"
+        android:text="@string/kein_barcode"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/bt_check_barcode"
@@ -117,6 +130,8 @@
             android:text="@string/gefrierschrank" />
 
     </RadioGroup>
+
+
 
 
 </RelativeLayout>

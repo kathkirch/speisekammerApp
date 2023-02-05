@@ -2,16 +2,22 @@ package com.example.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +36,8 @@ public class HelperClass {
     private Query mQuery;
     ProductAdapter productAdapter;
     ShoppingListAdapter shoppingListAdapter;
+    ProductAdapter foundProductsAdapter;
+    private boolean productFound = true;
 
     public void putInIntent (Produkt produkt, Intent intent) {
         intent.putExtra(PRODUKTNAME, produkt.getProductName());
@@ -66,16 +74,55 @@ public class HelperClass {
     public ProductAdapter selectProducts (String location, RecyclerView recyclerView){
         final DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("products");
         DatabaseReference locationNode = myRef.child(location);
-        mQuery = locationNode.orderByChild("packageAmount").startAfter(0);
+        mQuery = locationNode.orderByChild("packageAmount").startAfter(0.0);
 
-        FirebaseRecyclerOptions<Produkt> options = new FirebaseRecyclerOptions.Builder<Produkt>()
+        FirebaseRecyclerOptions <Produkt> options = new FirebaseRecyclerOptions.Builder<Produkt>()
                 .setQuery(mQuery, Produkt.class)
                 .build();
 
         productAdapter = new ProductAdapter(options);
+
         recyclerView.setAdapter(productAdapter);
 
         return productAdapter;
+    }
+
+    public ProductAdapter searchForProducts (String searchItem, String location, Context con) {
+        final DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("products");
+        DatabaseReference locationNode = myRef.child(location);
+
+        mQuery  = locationNode.orderByChild("productDescription").startAt(searchItem).endAt(searchItem+"\uf8ff");
+
+        FirebaseRecyclerOptions <Produkt> opt = new FirebaseRecyclerOptions.Builder<Produkt>()
+                .setQuery(mQuery, Produkt.class)
+                .build();
+
+        foundProductsAdapter = new ProductAdapter(opt);
+
+
+        mQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (snapshot.exists()){
+                    Toast.makeText(con, "Produkt gefunden", Toast.LENGTH_LONG).show();
+                    productFound = true;
+
+                } else {
+                    Toast.makeText(con, "Produkt nicht gefunden", Toast.LENGTH_LONG).show();
+                    productFound = false;
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.println(Log.ERROR, "Error", "Databaseerror");
+
+            }
+        });
+
+        return foundProductsAdapter;
     }
 
     public Produkt pushIntentToProdukt (Intent data){
@@ -137,5 +184,11 @@ public class HelperClass {
         return produkt;
     }
 
+    public boolean isProductFound() {
+        return productFound;
+    }
 
+    public void setProductFound(boolean productFound) {
+        this.productFound = productFound;
+    }
 }

@@ -52,9 +52,11 @@ public class BarcodeScanner extends AppCompatActivity {
     private Button checkBarcode;
     Intent intent;
     private String location;
+    private Button noBarcode;
 
     public static final String BARCODE = "barcodeText";
     public static final String LOCATION = "location";
+    public static final String ISBARCODE = "isBarcode";
 
     private RadioButton pantry;
     private RadioButton pantryBoard;
@@ -87,6 +89,7 @@ public class BarcodeScanner extends AppCompatActivity {
         surfaceView = findViewById(R.id.surface_view);
         barcodeText = findViewById(R.id.barcode_text);
         checkBarcode = findViewById(R.id.bt_check_barcode);
+        noBarcode = findViewById(R.id.btNObarcode);
 
         pantry = findViewById(R.id.radioPantry);
         pantryBoard = findViewById(R.id.radioPantryBoard);
@@ -97,24 +100,43 @@ public class BarcodeScanner extends AppCompatActivity {
         intent = new Intent (getApplicationContext(), IntoDatabase.class);
 
 
+        //Listener for Button to add product without barcode
+        noBarcode.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                String loco = locationPicker();
+                boolean isBarcode = false;
+                intent.putExtra(LOCATION, loco);
+                intent.putExtra(ISBARCODE, isBarcode);
+                startActivity(intent);
+            }
+        });
 
-
-        //Listener for Button
+        //Listener for Button to add product with barcode
         checkBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String loco = locationPicker();
                 String barcode = barcodeText.getText().toString();
+
                 intent.putExtra(LOCATION, loco);
                 intent.putExtra(BARCODE, barcode);
-                startActivity(intent);
-                //openSomeActivityForResult();
+
+                if (location.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Bitte Lagerort wählen", Toast.LENGTH_SHORT).show();
+                } else if (barcode.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Bitte Barcode scannen", Toast.LENGTH_SHORT).show();
+                } else if (!location.isEmpty() && !barcode.isEmpty()){
+                    startActivity(intent);
+                }
             }
         });
     }
 
     public String locationPicker (){
+
+        location = "";
 
         if (pantry.isChecked()){
             location = "Speis";
@@ -130,6 +152,7 @@ public class BarcodeScanner extends AppCompatActivity {
         }
         return  location;
     }
+
     private void initialiseDetectorsAndSources() {
 
         Toast.makeText(getApplicationContext(), "Barcode scanner started", Toast.LENGTH_SHORT).show();
@@ -196,6 +219,8 @@ public class BarcodeScanner extends AppCompatActivity {
                             }
                         }
                     });
+                } else {
+                    barcodeText.setText("");
                 }
             }
         });

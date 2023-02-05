@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,25 +13,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/title_style"
-        android:textSize="24sp"
+        android:gravity="center"
         android:padding="6dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
         android:text="@string/produktuebersicht"
         android:textColor="@color/white"
-        android:gravity="center">
+        android:textSize="24sp"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        app:layout_constraintTop_toTopOf="parent">
     </TextView>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/productRecycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        tools:listitem="@layout/recycler_products">
-    </androidx.recyclerview.widget.RecyclerView>
 
-</LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvProductTable"
+        app:layout_constraintVertical_bias="0.038">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/productRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            tools:listitem="@layout/recycler_products">
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </ScrollView>
+
+    <com.example.myapplication.MovableFloatingActionButton
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/search_symbol"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.769"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.804"></com.example.myapplication.MovableFloatingActionButton>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -51,8 +52,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bt_pantry.setOnClickListener(this::onClick);
         bt_shoppinglist.setOnClickListener(this::onClick);
 
+        /*
         serviceIntent = new Intent(this, Notifications.class);
         startService(serviceIntent);
+
+         */
     }
 
     @SuppressLint("NonConstantResourceId")

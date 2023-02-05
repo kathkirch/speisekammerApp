@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -17,7 +18,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
@@ -37,8 +43,9 @@ public class ProductTable extends AppCompatActivity {
 
     private ProductAdapter productAdapter;
     private TextView textView;
-
+    private MovableFloatingActionButton searchButton;
     ActivityResultLauncher<Intent> myActivityResultLauncher;
+
 
     final HelperClass hp = new HelperClass();
 
@@ -55,6 +62,9 @@ public class ProductTable extends AppCompatActivity {
 
         Intent intent = getIntent();
         String location = intent.getStringExtra(MainActivity.LOCATION);
+
+        searchButton = findViewById(R.id.searchButton);
+        searchButton.bringToFront();
 
         textView = findViewById(R.id.tvProductTable);
         textView.setText(textView.getText() + location);
@@ -103,7 +113,7 @@ public class ProductTable extends AppCompatActivity {
                 switch (direction) {
                     case ItemTouchHelper.RIGHT :
                         productAdapter.setItemZero(viewHolder.getAdapterPosition());
-                        Toast.makeText(getApplicationContext(), "Produkt aufberaucht",
+                        Toast.makeText(getApplicationContext(), "Produkt aufgebraucht",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case ItemTouchHelper.LEFT :
@@ -115,6 +125,44 @@ public class ProductTable extends AppCompatActivity {
                 }
             }
         }).attachToRecyclerView(recyclerView);
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(ProductTable.this);
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.popup_edit_text, null);
+                mBuilder.setView(dialogView);
+                final TextView tv = dialogView.findViewById(R.id.popUpTv);
+                final EditText editText = dialogView.findViewById(R.id.eT_newItemShoppinglist);
+                final Button button = dialogView.findViewById(R.id.button);
+                tv.setText("Wonach suchst du?");
+
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final String searchItem = editText.getText().toString();
+
+                        // da hats was, wird nicht true oder so? oder prueft gar nicht
+                        // keine Ahnung
+                        // hier nochmal kontorllieren. irgendwo da is das PROBLEM!!!!!!!
+                        if (hp.isProductFound()){
+                            productAdapter = hp.searchForProducts(searchItem, location,
+                                    getApplicationContext());
+                            recyclerView.setAdapter(productAdapter);
+                            onStart();
+                        } else if (! hp.isProductFound() ){
+                            productAdapter = hp.selectProducts(location, recyclerView);
+                            recyclerView.setAdapter(productAdapter);
+                            onStart();
+                        }
+                    }
+                });
+
+                final AlertDialog dialog = mBuilder.create();
+                dialog.show();
+            }
+        });
 
 
         myActivityResultLauncher = registerForActivityResult(
@@ -153,7 +201,7 @@ public class ProductTable extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getApplicationContext(), "Produktanzahl" +
-                                                "in " + produktToUpdate.getLocation() + " wurde aktualisiert",
+                                                " in " + produktToUpdate.getLocation() + " wurde aktualisiert",
                                         Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -218,6 +266,8 @@ public class ProductTable extends AppCompatActivity {
         myActivityResultLauncher.launch(intent);
     }
 
+
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -229,4 +279,6 @@ public class ProductTable extends AppCompatActivity {
         super.onStop();
         productAdapter.stopListening();
     }
+
+
 }
