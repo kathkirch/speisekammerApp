@@ -37,7 +37,7 @@ public class HelperClass {
     ProductAdapter productAdapter;
     ShoppingListAdapter shoppingListAdapter;
     ProductAdapter foundProductsAdapter;
-    private boolean productFound = true;
+    private boolean productFound;
 
     public void putInIntent (Produkt produkt, Intent intent) {
         intent.putExtra(PRODUKTNAME, produkt.getProductName());
@@ -88,6 +88,7 @@ public class HelperClass {
     }
 
     public ProductAdapter searchForProducts (String searchItem, String location, Context con) {
+
         final DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("products");
         DatabaseReference locationNode = myRef.child(location);
 
@@ -112,7 +113,6 @@ public class HelperClass {
                     Toast.makeText(con, "Produkt nicht gefunden", Toast.LENGTH_LONG).show();
                     productFound = false;
                 }
-
             }
 
             @Override

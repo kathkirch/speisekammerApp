@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SortedList;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,8 +35,6 @@ public class ProductAdapter extends FirebaseRecyclerAdapter <Produkt, ProductAda
 
     final HelperClass hp = new HelperClass();
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-
 
     final DatabaseReference shoppingListNode = database.getReference("shoppinglist");
 
@@ -128,4 +128,5 @@ public class ProductAdapter extends FirebaseRecyclerAdapter <Produkt, ProductAda
         this.listener = listener;
 
     }
+
 }

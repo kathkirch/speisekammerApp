@@ -42,5 +42,6 @@
     <string name="produkt_der_einkaufsliste_hinzufuegen">Produkt der Einkaufsliste hinzufügen</string>
     <string name="barcode_text">Barcode Text</string>
     <string name="kein_barcode">Kein Barcode</string>
+    <string name="no_barcodeproduct_input">Produkt ohne Barcode</string>
 
 </resources>

@@ -126,43 +126,10 @@ public class ProductTable extends AppCompatActivity {
             }
         }).attachToRecyclerView(recyclerView);
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(ProductTable.this);
-                LayoutInflater inflater = getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.popup_edit_text, null);
-                mBuilder.setView(dialogView);
-                final TextView tv = dialogView.findViewById(R.id.popUpTv);
-                final EditText editText = dialogView.findViewById(R.id.eT_newItemShoppinglist);
-                final Button button = dialogView.findViewById(R.id.button);
-                tv.setText("Wonach suchst du?");
 
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final String searchItem = editText.getText().toString();
 
-                        // da hats was, wird nicht true oder so? oder prueft gar nicht
-                        // keine Ahnung
-                        // hier nochmal kontorllieren. irgendwo da is das PROBLEM!!!!!!!
-                        if (hp.isProductFound()){
-                            productAdapter = hp.searchForProducts(searchItem, location,
-                                    getApplicationContext());
-                            recyclerView.setAdapter(productAdapter);
-                            onStart();
-                        } else if (! hp.isProductFound() ){
-                            productAdapter = hp.selectProducts(location, recyclerView);
-                            recyclerView.setAdapter(productAdapter);
-                            onStart();
-                        }
-                    }
-                });
 
-                final AlertDialog dialog = mBuilder.create();
-                dialog.show();
-            }
-        });
+
 
 
         myActivityResultLauncher = registerForActivityResult(
@@ -258,6 +225,53 @@ public class ProductTable extends AppCompatActivity {
                 }
             }
         });
+
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //popup oeffnen
+                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(ProductTable.this);
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.popup_edit_text, null);
+                mBuilder.setView(dialogView);
+                final TextView tv = dialogView.findViewById(R.id.popUpTv);
+                final EditText editText = dialogView.findViewById(R.id.eT_newItemShoppinglist);
+                final Button button = dialogView.findViewById(R.id.button);
+                tv.setText("Wonach suchst du?");
+
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        final String searchItem = editText.getText().toString();
+
+                        // da hats was, wird nicht true oder so? oder prueft gar nicht
+                        // keine Ahnung
+                        // hier nochmal kontorllieren. irgendwo da is das PROBLEM!!!!!!!
+
+                        productAdapter = hp.searchForProducts(searchItem, location,
+                                getApplicationContext());
+
+                        if (hp.isProductFound()){
+                            recyclerView.setAdapter(productAdapter);
+                            onStart();
+
+                        } else if (! hp.isProductFound() ){
+                            productAdapter = hp.selectProducts(location, recyclerView);
+                            recyclerView.setAdapter(productAdapter);
+                            onStart();
+                        }
+                    }
+                });
+
+                final AlertDialog dialog = mBuilder.create();
+                dialog.show();
+            }
+        });
+
+
+
     }
 
     public void openActivityForResult (Produkt produkt) {

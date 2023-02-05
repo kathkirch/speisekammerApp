@@ -55,14 +55,16 @@ public class IntoDatabase extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
+
         boolean isBarcode = intent.getBooleanExtra(BarcodeScanner.ISBARCODE, false);
 
-        if (isBarcode){
+//        if (isBarcode){
             receivingBarcode = intent.getStringExtra(BarcodeScanner.BARCODE);
             loco = intent.getStringExtra(BarcodeScanner.LOCATION);
 
             locationNode = productNode.child(loco);
 
+            //pruefen ob product in database ist
             locationNode.addListenerForSingleValueEvent(new ValueEventListener() {
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
@@ -74,6 +76,7 @@ public class IntoDatabase extends AppCompatActivity {
 
                         if (checkBarcode(receivingBarcode, barcodeDB)) {
 
+                            // packageAmount um +1 aktualisieren
                             double newPackageAmount = produkt.getPackageAmount() + 1;
                             produkt.setPackageAmount(newPackageAmount);
 
@@ -82,6 +85,7 @@ public class IntoDatabase extends AppCompatActivity {
                             productKnowen = true;
                         }
                     }
+                    // if true anzahl aktualisieren else neues produkt hinzufuegen
                     operateOnDatabase(productKnowen);
                 }
                 @Override
@@ -90,15 +94,44 @@ public class IntoDatabase extends AppCompatActivity {
                 }
             });
             
-        } else {
-            loco = intent.getStringExtra(BarcodeScanner.LOCATION);
-
-            locationNode = productNode.child(loco);
-        }
-
-
-
-
+//        } else {
+//            //hier auch moeglichkeit zur Produkt eingabe
+//
+//            //Location holen
+//            loco = intent.getStringExtra(BarcodeScanner.LOCATION);
+//            locationNode = productNode.child(loco);
+//
+//            //Barcode holen
+//            receivingBarcode = intent.getStringExtra(BarcodeScanner.BARCODE);
+//
+//            locationNode = productNode.child(loco);
+//
+//            //Barcode in Datenbank suchen
+//            locationNode.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @RequiresApi(api = Build.VERSION_CODES.N)
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    productKnowen = false;
+//                    for (DataSnapshot data : dataSnapshot.getChildren()){
+//                        Produkt produkt = data.getValue(Produkt.class);
+//                        String barcodeDB = produkt.getBarcode();
+//
+//                        if (checkBarcode(receivingBarcode, barcodeDB)) {
+//                            // packageAmount um +1 aktualisieren
+//                            double newPackageAmount = produkt.getPackageAmount() + 1;
+//                            produkt.setPackageAmount(newPackageAmount);
+//                            hashMap = hp.produktToHashMap(produkt);
+//                            productKnowen = true;
+//                        }
+//                    }
+//                    // if produktknowen true anzahl aktualisieren else neues produkt hinzufuegen
+//                    operateOnDatabase(productKnowen);
+//                }
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//                    Toast.makeText(getApplicationContext(), "hier ging etwas schief", Toast.LENGTH_SHORT).show();
+//                }
+//            });
 
         someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
